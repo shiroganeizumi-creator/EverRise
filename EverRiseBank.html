@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EverRise Bank | Secure Loan Payment Portal</title>
+<meta name="description" content="EverRise Bank secure online loan payment portal demo.">
+<style>
+  :root{
+    --navy:#0b2345;
+    --navy-2:#132f57;
+    --navy-3:#1c426d;
+    --gold:#e3b52b;
+    --gold-2:#f2ca4b;
+    --gold-soft:#fff8df;
+    --cream:#fbfaf5;
+    --bg:#f3f6fa;
+    --white:#fff;
+    --text:#20324b;
+    --muted:#66758a;
+    --line:#dce4ee;
+    --success:#16845b;
+    --danger:#c83f3f;
+    --shadow:0 18px 45px rgba(11,35,69,.10);
+    --shadow-sm:0 8px 22px rgba(11,35,69,.08);
+    --radius:14px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--bg);color:var(--text);line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  button,input,select{font:inherit}
+  button{cursor:pointer}
+  a{text-decoration:none;color:inherit}
+  .container{width:min(1160px,calc(100% - 40px));margin:auto}
+
+  /* AUTH */
+  #auth-screen{
+    min-height:100vh;background:
+      radial-gradient(circle at 82% 18%,rgba(227,181,43,.14),transparent 28%),
+      radial-gradient(circle at 12% 82%,rgba(255,255,255,.06),transparent 24%),
+      linear-gradient(135deg,var(--navy),#07182f);
+    display:flex;align-items:center;justify-content:center;padding:24px;
+  }
+  .auth-wrap{width:min(980px,100%);display:grid;grid-template-columns:1.08fr .92fr;overflow:hidden;border-radius:22px;box-shadow:0 28px 80px rgba(0,0,0,.25)}
+  .auth-brand{
+    position:relative;padding:56px;color:#fff;min-height:610px;overflow:hidden;
+    background:linear-gradient(145deg,#0a2142,#173b66);
+  }
+  .auth-brand:before,.auth-brand:after{
+    content:"";position:absolute;border:1px solid rgba(227,181,43,.35);border-radius:50%;
+  }
+  .auth-brand:before{width:390px;height:390px;right:-160px;top:-80px}
+  .auth-brand:after{width:260px;height:260px;right:-95px;top:-15px}
+  .brand-lockup{display:flex;gap:13px;align-items:center;position:relative;z-index:2}
+  .brand-mark{
+    width:52px;height:52px;border:2px solid var(--gold);border-radius:50%;
+    display:grid;place-items:center;color:var(--gold);font-weight:900;font-size:16px;
+  }
+  .brand-name{font-family:Georgia,serif;font-size:25px;letter-spacing:3px}
+  .brand-name span{color:var(--gold)}
+  .tagline{font-family:Georgia,serif;font-style:italic;color:var(--gold-2);font-size:12px;letter-spacing:2px;margin-top:2px}
+  .auth-copy{position:relative;z-index:2;margin-top:105px;max-width:520px}
+  .eyebrow{font-size:11px;letter-spacing:3px;font-weight:800;color:var(--gold);text-transform:uppercase}
+  .auth-copy h1{font:700 42px/1.12 Georgia,serif;margin:14px 0 18px}
+  .auth-copy p{color:#c8d5e5;max-width:470px}
+  .secure-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:30px}
+  .secure-pill{padding:8px 11px;border:1px solid rgba(255,255,255,.16);border-radius:999px;background:rgba(255,255,255,.05);font-size:12px;color:#dbe6f2}
+  .auth-card{background:#fff;padding:42px 40px;display:flex;flex-direction:column;justify-content:center}
+  .auth-card h2{font:700 30px Georgia,serif;color:var(--navy)}
+  .auth-card .sub{color:var(--muted);font-size:14px;margin:5px 0 24px}
+  .demo-note{background:var(--gold-soft);border:1px solid #f0d36a;border-radius:10px;padding:12px 13px;font-size:12px;color:#765a0d;margin-bottom:20px}
+  .field{display:flex;flex-direction:column;gap:7px;margin-bottom:17px}
+  .field label{font-size:12px;font-weight:800;color:var(--navy)}
+  .field input,.field select{
+    width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:9px;
+    background:#fff;color:var(--text);outline:none;transition:.2s;
+  }
+  .field input:focus,.field select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(227,181,43,.16)}
+  .hint{font-size:11px;color:var(--muted)}
+  .password-row{position:relative}
+  .password-row input{padding-right:70px}
+  .toggle-pass{position:absolute;right:9px;top:8px;border:0;background:transparent;color:var(--muted);font-size:11px;padding:7px}
+  .btn{
+    border:0;border-radius:9px;padding:13px 20px;font-weight:800;font-size:14px;
+    transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .btn-gold{background:linear-gradient(180deg,var(--gold-2),var(--gold));color:#091a31;box-shadow:0 7px 16px rgba(181,139,22,.22)}
+  .btn-gold:hover{transform:translateY(-1px);filter:brightness(1.03)}
+  .btn-gold:disabled{opacity:.5;cursor:not-allowed;transform:none}
+  .btn-dark{background:var(--navy);color:#fff}
+  .btn-dark:hover{background:var(--navy-2)}
+  .btn-outline{background:#fff;color:var(--navy);border:1px solid var(--line)}
+  .btn-outline:hover{border-color:#b8c6d6;background:#f8fafc}
+  .btn-block{width:100%}
+
+  /* APP HEADER */
+  #app-content{display:none;min-height:100vh}
+  header{position:sticky;top:0;z-index:1000;background:rgba(8,29,57,.97);color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.13)}
+  .topbar{height:82px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .brand .brand-mark{width:43px;height:43px;font-size:13px}
+  .brand .brand-name{font-size:20px}
+  .brand .tagline{font-size:9px}
+  nav{display:flex;align-items:center;gap:28px}
+  .nav-links{display:flex;gap:25px}
+  .nav-links a{font-size:13px;font-weight:700;color:#d6e1ed;padding:31px 0 27px;border-bottom:3px solid transparent;cursor:pointer}
+  .nav-links a:hover,.nav-links a.active{color:#fff;border-bottom-color:var(--gold)}
+  .secure-badge{border:1px solid rgba(227,181,43,.5);color:#f6d86e;border-radius:999px;padding:8px 12px;font-size:11px;font-weight:800;white-space:nowrap}
+  .user-area{display:flex;align-items:center;gap:10px;padding-left:20px;border-left:1px solid rgba(255,255,255,.16)}
+  .user-email{font-size:11px;color:#cbd7e5;max-width:150px;overflow:hidden;text-overflow:ellipsis}
+  .logout{border:1px solid rgba(255,255,255,.22);background:transparent;color:#fff;border-radius:7px;padding:7px 10px;font-size:11px}
+
+  /* GENERAL */
+  .view-section{display:none;animation:fade .25s ease}
+  .view-section.active{display:block}
+  @keyframes fade{from{opacity:.2;transform:translateY(5px)}to{opacity:1;transform:none}}
+  .hero{
+    position:relative;overflow:hidden;color:#fff;
+    background:linear-gradient(135deg,#0c274b,#1b416b);min-height:440px;
+    border-bottom:5px solid var(--gold);
+  }
+  .hero:before,.hero:after{content:"";position:absolute;border:1px solid rgba(227,181,43,.34);border-radius:50%;pointer-events:none}
+  .hero:before{width:500px;height:500px;right:-150px;top:-170px}
+  .hero:after{width:340px;height:340px;right:-70px;top:-90px}
+  .hero-grid{min-height:440px;display:grid;grid-template-columns:1.2fr .8fr;align-items:center;position:relative;z-index:2}
+  .hero-copy{padding:55px 0}
+  .hero .eyebrow{margin-bottom:14px}
+  .hero h1{font:700 clamp(35px,4vw,54px)/1.08 Georgia,serif;max-width:700px}
+  .hero h1 span{display:block}
+  .hero p{color:#d2deeb;max-width:620px;margin:19px 0 26px;font-size:15px}
+  .hero-actions{display:flex;gap:11px;flex-wrap:wrap}
+  .hero .btn-outline{background:rgba(255,255,255,.07);color:#fff;border-color:rgba(255,255,255,.28)}
+  .hero-graphic{display:flex;justify-content:center;align-items:center}
+  .portal-orbit{width:310px;height:310px;border:1px solid rgba(227,181,43,.42);border-radius:50%;display:grid;place-items:center;position:relative}
+  .portal-orbit:before{content:"";position:absolute;width:215px;height:215px;border:1px solid rgba(227,181,43,.38);border-radius:50%}
+  .portal-card{position:relative;width:195px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:22px;backdrop-filter:blur(8px);box-shadow:0 18px 50px rgba(0,0,0,.2)}
+  .portal-card .mini-lock{width:38px;height:38px;border-radius:10px;background:var(--gold);color:var(--navy);display:grid;place-items:center;margin-bottom:15px;font-weight:900}
+  .portal-card strong{display:block;font-family:Georgia,serif;font-size:20px}
+  .portal-card small{color:#d6e1ed;font-size:11px}
+
+  .steps{background:#fff;box-shadow:0 8px 25px rgba(11,35,69,.08);position:relative;z-index:3}
+  .steps-grid{display:grid;grid-template-columns:repeat(3,1fr)}
+  .step{padding:28px 28px 30px;border-right:1px solid var(--line)}
+  .step:last-child{border-right:0}
+  .step-num{color:#bd8e15;font:700 25px Georgia,serif;margin-bottom:5px}
+  .step h3{font:800 16px Georgia,serif;color:var(--navy)}
+  .step p{font-size:12px;color:var(--muted);margin-top:5px}
+
+  .section{padding:62px 0}
+  .section-head{margin-bottom:28px}
+  .section-head .eyebrow{color:#a77b0e}
+  .section-head h2{font:700 34px Georgia,serif;color:var(--navy);margin-top:8px}
+  .section-head p{color:var(--muted);max-width:720px;margin-top:7px}
+  .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+  .product-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:25px;box-shadow:var(--shadow-sm);position:relative}
+  .product-top{display:flex;justify-content:space-between;gap:15px}
+  .product-icon{width:48px;height:48px;border-radius:11px;background:var(--navy);color:var(--gold);display:grid;place-items:center}
+  .product-tag{font-size:10px;letter-spacing:1px;font-weight:900;background:#faf3dd;color:#a3780e;border-radius:999px;padding:7px 10px;height:max-content}
+  .product-card h3{font:700 22px Georgia,serif;color:var(--navy);margin:18px 0 6px}
+  .product-card p{font-size:13px;color:var(--muted)}
+  .product-meta{border-top:1px dashed #d6dee8;margin-top:18px;padding-top:14px;display:flex;gap:30px;flex-wrap:wrap}
+  .product-meta div{font-size:11px;color:var(--muted)}
+  .product-meta b{display:block;color:var(--navy);font-size:12px}
+
+  /* PAYMENT CONSOLE */
+  .payment-section{background:#eef3f8}
+  .payment-shell{max-width:860px;margin:auto;background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:var(--shadow)}
+  .payment-head{background:var(--navy);color:#fff;padding:20px 25px;display:flex;align-items:center;gap:10px}
+  .payment-head .dot{width:10px;height:10px;border-radius:50%;background:var(--gold)}
+  .payment-head h2{font:700 18px Georgia,serif}
+  .payment-body{padding:32px}
+  .progress{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:30px}
+  .prog{font-size:11px;text-align:center;color:#7b8999;font-weight:800}
+  .prog .bar{height:4px;background:#e1e7ef;border-radius:5px;margin-bottom:8px}
+  .prog.on{color:var(--navy)}
+  .prog.on .bar{background:var(--gold)}
+  .panel{display:none;animation:fade .25s ease}
+  .panel.on{display:block}
+  .panel-title{font:700 26px Georgia,serif;color:var(--navy);margin-bottom:5px}
+  .panel-sub{color:var(--muted);font-size:13px;margin-bottom:24px}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+  .full{grid-column:1/-1}
+  .loan-tabs,.methods{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .methods{grid-template-columns:repeat(3,1fr)}
+  .select-card{border:1px solid var(--line);border-radius:11px;padding:17px;cursor:pointer;background:#fff;transition:.2s}
+  .select-card:hover{border-color:#b8c6d6}
+  .select-card.sel{border-color:var(--gold);box-shadow:0 0 0 2px rgba(227,181,43,.15);background:#fffaf0}
+  .select-card .icon{font-size:20px;margin-bottom:7px}
+  .select-card .t{font-weight:900;color:var(--navy);font-size:14px}
+  .select-card .d{font-size:11px;color:var(--muted);margin-top:2px}
+  .lookup{display:none;background:#f7f9fc;border:1px solid var(--line);border-radius:11px;padding:17px;margin-top:20px}
+  .lookup .row{display:flex;justify-content:space-between;padding:7px 0;font-size:12px;color:var(--muted)}
+  .lookup .row b{color:var(--navy)}
+  .lookup .total{border-top:1px dashed #c9d4df;margin-top:7px;padding-top:14px;font-weight:800}
+  .lookup .total .amount{color:#b0800c;font-size:21px}
+  .actions{display:flex;justify-content:space-between;gap:10px;margin-top:26px;padding-top:22px;border-top:1px solid var(--line)}
+  .secure-note{display:flex;gap:9px;align-items:flex-start;background:#f6fbf8;border:1px solid #cce8dc;border-radius:10px;padding:11px 12px;color:#39745c;font-size:11px;margin-top:16px}
+  .method-fields{margin-top:20px}
+  .receipt{text-align:center}
+  .check{width:68px;height:68px;border-radius:50%;background:#edf9f3;color:var(--success);display:grid;place-items:center;margin:0 auto 18px;font-size:31px}
+  .receipt h3{font:700 30px Georgia,serif;color:var(--navy)}
+  .receipt>p{color:var(--muted);font-size:13px;margin:6px 0 23px}
+  .receipt-table{text-align:left;border:1px solid var(--line);border-radius:11px;overflow:hidden}
+  .receipt-table div{display:flex;justify-content:space-between;gap:15px;padding:12px 15px;border-bottom:1px solid var(--line);font-size:12px}
+  .receipt-table div:last-child{border-bottom:0}
+  .receipt-table span{color:var(--muted)}
+  .receipt-table b{color:var(--navy)}
+
+  /* DASHBOARD */
+  .dashboard-strip{background:#fff;border-bottom:1px solid var(--line)}
+  .dash-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:20px;padding:30px 0}
+  .welcome-card{background:linear-gradient(135deg,var(--navy),var(--navy-3));color:#fff;border-radius:15px;padding:27px;position:relative;overflow:hidden}
+  .welcome-card:after{content:"";position:absolute;width:210px;height:210px;border:1px solid rgba(227,181,43,.25);border-radius:50%;right:-90px;top:-80px}
+  .welcome-card h2{font:700 28px Georgia,serif;position:relative;z-index:2}
+  .welcome-card p{color:#cdd9e7;font-size:13px;max-width:580px;margin:8px 0 20px;position:relative;z-index:2}
+  .balance-card{background:#fff;border:1px solid var(--line);border-radius:15px;padding:25px}
+  .balance-card .label{font-size:11px;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);font-weight:900}
+  .balance-card .value{font:700 30px Georgia,serif;color:var(--navy);margin:6px 0}
+  .balance-card small{font-size:11px;color:var(--muted)}
+
+  /* HISTORY / SECURITY / HELP */
+  .history-box,.info-card{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow-sm)}
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;min-width:680px}
+  th,td{padding:14px 16px;text-align:left;border-bottom:1px solid var(--line);font-size:12px}
+  th{background:#f6f8fb;color:var(--navy);font-size:10px;text-transform:uppercase;letter-spacing:1px}
+  tbody tr:hover{background:#fbfcfe}
+  .empty{text-align:center;padding:40px;color:var(--muted)}
+  .info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .info-card{padding:23px}
+  .info-card .big-icon{width:44px;height:44px;background:#fff8df;color:#9a720d;border-radius:10px;display:grid;place-items:center;margin-bottom:15px}
+  .info-card h3{font:700 18px Georgia,serif;color:var(--navy);margin-bottom:6px}
+  .info-card p,.info-card li{font-size:12px;color:var(--muted)}
+  .info-card ul{padding-left:17px;margin-top:10px}
+  .faq{border-top:1px solid var(--line);padding:14px 0}
+  .faq button{width:100%;display:flex;justify-content:space-between;text-align:left;border:0;background:none;color:var(--navy);font-weight:800;font-size:13px}
+  .faq p{display:none;color:var(--muted);font-size:12px;margin-top:8px}
+  .faq.open p{display:block}
+
+  footer{background:var(--navy);color:#aebfd2;padding:27px 0;font-size:11px}
+  .footer-grid{display:flex;justify-content:space-between;gap:20px;align-items:center}
+  .footer-brand{font-family:Georgia,serif;color:#fff;font-size:16px}
+  .footer-brand span{color:var(--gold)}
+  .toast{position:fixed;right:22px;bottom:22px;z-index:2000;background:var(--navy);color:#fff;border-left:4px solid var(--gold);padding:13px 16px;border-radius:9px;box-shadow:var(--shadow);font-size:12px;transform:translateY(120px);opacity:0;transition:.25s}
+  .toast.show{transform:none;opacity:1}
+
+  @media(max-width:900px){
+    .auth-wrap{grid-template-columns:1fr}.auth-brand{display:none}
+    .hero-grid{grid-template-columns:1fr}.hero-graphic{display:none}
+    .dash-grid{grid-template-columns:1fr}
+    nav{gap:14px}.secure-badge{display:none}
+  }
+  @media(max-width:720px){
+    .container{width:min(100% - 26px,1160px)}
+    .topbar{height:auto;min-height:72px}.nav-links{gap:13px}.nav-links a{padding:24px 0 21px;font-size:11px}
+    .user-area{display:none}
+    .brand .brand-name{font-size:17px}
+    .hero{min-height:auto}.hero-grid{min-height:auto}.hero-copy{padding:55px 0}
+    .hero h1{font-size:37px}
+    .steps-grid,.product-grid,.info-grid{grid-template-columns:1fr}
+    .step{border-right:0;border-bottom:1px solid var(--line)}
+    .step:last-child{border-bottom:0}
+    .form-grid,.loan-tabs{grid-template-columns:1fr}.methods{grid-template-columns:1fr}
+    .payment-body{padding:22px 17px}
+    .actions{flex-direction:column-reverse}.actions .btn{width:100%}
+    .auth-card{padding:32px 24px}
+    .footer-grid{flex-direction:column;align-items:flex-start}
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="auth-screen">
+  <div class="auth-wrap">
+    <div class="auth-brand">
+      <div class="brand-lockup">
+        <div class="brand-mark">ER</div>
+        <div>
+          <div class="brand-name">Ever<span>Rise</span> Bank</div>
+          <div class="tagline">Together, We Rise</div>
+        </div>
+      </div>
+      <div class="auth-copy">
+        <div class="eyebrow">Secure Loan Payment Portal</div>
+        <h1>Settle your loan online, in minutes.</h1>
+        <p>A cleaner, more complete EverRise experience for checking loan dues, choosing a payment method, and receiving a payment reference.</p>
+        <div class="secure-pills">
+          <span class="secure-pill">🔒 Secure session</span>
+          <span class="secure-pill">✓ Receipt reference</span>
+          <span class="secure-pill">24/7 access</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-card">
+      <div class="brand-lockup" style="margin-bottom:25px">
+        <div class="brand-mark" style="background:var(--navy);color:var(--gold)">ER</div>
+        <div>
+          <div class="brand-name" style="font-size:21px;color:var(--navy)">Ever<span>Rise</span> Bank</div>
+          <div class="tagline" style="color:#a77b0e">Together, We Rise</div>
+        </div>
+      </div>
+      <h2>Secure Login</h2>
+      <p class="sub">Access your EverRise loan payment portal.</p>
+      <div class="demo-note"><b>Demo portal:</b> use any valid-looking email and password. No real bank credentials are required.</div>
+
+      <form id="login-form">
+        <div class="field">
+          <label for="auth-email">Email Address</label>
+          <input id="auth-email" type="email" value="user@everrise.com" placeholder="you@example.com" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="auth-password">Password</label>
+          <div class="password-row">
+            <input id="auth-password" type="password" value="demo123" placeholder="Enter password" autocomplete="current-password" required>
+            <button class="toggle-pass" type="button" id="toggle-pass">Show</button>
+          </div>
+        </div>
+        <button class="btn btn-gold btn-block" type="submit" id="login-btn">Sign In Securely</button>
+      </form>
+      <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:17px">For presentation/demo use only. This version does not move real money.</p>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app-content">
+  <header>
+    <div class="container topbar">
+      <a class="brand" href="#" data-view="dashboard">
+        <div class="brand-mark">ER</div>
+        <div>
+          <div class="brand-name">Ever<span>Rise</span> Bank</div>
+          <div class="tagline">Together, We Rise</div>
+        </div>
+      </a>
+      <nav>
+        <div class="nav-links">
+          <a data-view="dashboard" class="active">Home</a>
+          <a data-view="products">Loan Products</a>
+          <a data-view="payments">Make a Payment</a>
+          <a data-view="history">Payment History</a>
+          <a data-view="security">Security</a>
+          <a data-view="help">Help</a>
+        </div>
+        <div class="user-area">
+          <span class="user-email" id="user-display">user@everrise.com</span>
+          <button class="logout" id="logout-btn">Sign Out</button>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <main id="view-dashboard" class="view-section active">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow">Strictly for loan payments</div>
+          <h1>Settle your Car Loan or Mortgage <span>Loan online, in minutes.</span></h1>
+          <p>This portal is designed for paying existing EverRise Bank loans. Review your amount due, select a payment method, confirm the payment, and receive your reference instantly.</p>
+          <div class="hero-actions">
+            <button class="btn btn-gold" data-view="payments">Pay My Loan Now</button>
+            <button class="btn btn-outline" data-view="products">View Loan Products</button>
+          </div>
+          <div style="margin-top:17px;color:#aebfd2;font-size:11px">🔒 Secure Payment Portal &nbsp; • &nbsp; Existing loans only</div>
+        </div>
+        <div class="hero-graphic">
+          <div class="portal-orbit">
+            <div class="portal-card">
+              <div class="mini-lock">✓</div>
+              <strong>Payment<br>Console</strong>
+              <small>Simple. Secure. Clear.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="steps">
+      <div class="container steps-grid">
+        <div class="step"><div class="step-num">1</div><h3>Identify your loan</h3><p>Enter your loan account number and choose Car Loan or Mortgage Loan.</p></div>
+        <div class="step"><div class="step-num">2</div><h3>Review your dues</h3><p>The portal shows your monthly installment, due date, and amount due.</p></div>
+        <div class="step"><div class="step-num">3</div><h3>Pay and get a receipt</h3><p>Choose a payment method, confirm, and receive your reference number.</p></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Eligible for this portal</div>
+          <h2>Payment for these loan products only</h2>
+          <p>Payments made here apply to existing, approved EverRise Bank Car Loans and Mortgage Loans.</p>
+        </div>
+        <div class="product-grid">
+          <article class="product-card">
+            <div class="product-top"><div class="product-icon">🚗</div><div class="product-tag">CAR LOAN</div></div>
+            <h3>Car Loan</h3>
+            <p>Monthly amortization payments for your financed vehicle. The financed vehicle serves as collateral.</p>
+            <div class="product-meta"><div><b>Monthly</b>Repayment</div><div><b>12–60 months</b>Term</div><div><b>₱30,000–₱5M</b>Credit limit</div></div>
+          </article>
+          <article class="product-card">
+            <div class="product-top"><div class="product-icon">⌂</div><div class="product-tag">MORTGAGE LOAN</div></div>
+            <h3>Mortgage Loan</h3>
+            <p>Monthly amortization payments for your home loan, secured by the mortgaged property.</p>
+            <div class="product-meta"><div><b>Monthly</b>Repayment</div><div><b>Up to 20 years</b>Term</div><div><b>₱1M–₱15M</b>Credit limit</div></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="info-grid">
+          <div class="info-card"><div class="big-icon">🔒</div><h3>Secure by design</h3><p>Payment details are validated in the browser and sensitive demo payment fields are never stored in transaction history.</p></div>
+          <div class="info-card"><div class="big-icon">⚡</div><h3>Fast confirmation</h3><p>After confirmation, the portal creates a unique reference number and shows a clear payment receipt.</p></div>
+          <div class="info-card"><div class="big-icon">▣</div><h3>Payment history</h3><p>Completed demo payments remain available in this browser so you can review them later.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- PRODUCTS -->
+  <main id="view-products" class="view-section">
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">EverRise lending</div>
+          <h2>Loan Products</h2>
+          <p>Use this portal only for payments on existing approved EverRise loan accounts.</p>
+        </div>
+        <div class="product-grid">
+          <article class="product-card">
+            <div class="product-top"><div class="product-icon">🚗</div><div class="product-tag">VEHICLE FINANCING</div></div>
+            <h3>Car Loan</h3>
+            <p>Make monthly amortization payments for your financed vehicle and keep your payment record organized.</p>
+            <div class="product-meta"><div><b>Monthly</b>Repayment</div><div><b>12–60 months</b>Term</div><div><b>₱30,000–₱5M</b>Credit limit</div></div>
+          </article>
+          <article class="product-card">
+            <div class="product-top"><div class="product-icon">⌂</div><div class="product-tag">HOME FINANCING</div></div>
+            <h3>Mortgage Loan</h3>
+            <p>Review and pay your monthly home-loan amortization through one guided payment process.</p>
+            <div class="product-meta"><div><b>Monthly</b>Repayment</div><div><b>Up to 20 years</b>Term</div><div><b>₱1M–₱15M</b>Credit limit</div></div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- PAYMENT -->
+  <main id="view-payments" class="view-section">
+    <section class="section payment-section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Payment console</div>
+          <h2>Make a Loan Payment</h2>
+          <p>Demo portal for presentation purposes. Simulated balances and confirmations are stored locally in this browser.</p>
+        </div>
+
+        <div class="payment-shell">
+          <div class="payment-head"><span class="dot"></span><h2>Loan Payment — EverRise Bank</h2></div>
+          <div class="payment-body">
+            <div class="progress">
+              <div class="prog on" id="prog1"><div class="bar"></div>1. Loan details</div>
+              <div class="prog" id="prog2"><div class="bar"></div>2. Payment method</div>
+              <div class="prog" id="prog3"><div class="bar"></div>3. Confirm</div>
+            </div>
+
+            <!-- STEP 1 -->
+            <section class="panel on" id="panel1">
+              <h3 class="panel-title">Identify your loan</h3>
+              <p class="panel-sub">Choose your loan product and enter the account information shown on your loan documents.</p>
+
+              <div class="form-grid">
+                <div class="field full">
+                  <label>Loan Type *</label>
+                  <div class="loan-tabs">
+                    <div class="select-card sel" id="loan-car" data-loan="Car Loan">
+                      <div class="icon">🚗</div><div class="t">Car Loan</div><div class="d">Vehicle financing amortization</div>
+                    </div>
+                    <div class="select-card" id="loan-mortgage" data-loan="Mortgage Loan">
+                      <div class="icon">⌂</div><div class="t">Mortgage Loan</div><div class="d">Home loan amortization</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field">
+                  <label for="account-number">Loan Account Number *</label>
+                  <input id="account-number" maxlength="18" placeholder="e.g. ER-CL-0001234" autocomplete="off">
+                  <span class="hint">For this demo, enter at least 6 characters.</span>
+                </div>
+                <div class="field">
+                  <label for="amount-to-pay">Amount to Pay *</label>
+                  <input id="amount-to-pay" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="e.g. 15000.00" autocomplete="off">
+                  <span class="hint">Enter the exact amount you want to pay.</span>
+                </div>
+                <div class="field full">
+                  <label for="borrower-name">Borrower Name</label>
+                  <input id="borrower-name" maxlength="80" placeholder="Name on loan documents">
+                </div>
+              </div>
+
+              <div class="lookup" id="lookup-card">
+                <div class="row"><span>Loan product</span><b id="summary-product">—</b></div>
+                <div class="row"><span>Next due date</span><b id="summary-due">—</b></div>
+                <div class="row"><span>Amount to pay</span><b id="summary-installment">—</b></div>
+                <div class="row total"><span>Total amount to pay</span><span class="amount" id="summary-total">—</span></div>
+              </div>
+
+              <div class="actions">
+                <span></span>
+                <button class="btn btn-gold" id="continue-details" disabled>Continue to Payment Method →</button>
+              </div>
+            </section>
+
+            <!-- STEP 2 -->
+            <section class="panel" id="panel2">
+              <h3 class="panel-title">Choose a payment method</h3>
+              <p class="panel-sub">Select how you want to complete this demo payment.</p>
+              <div class="methods">
+                <div class="select-card sel" data-method="Bank Transfer" data-code="bank" id="method-bank"><div class="icon">🏦</div><div class="t">Bank Transfer</div><div class="d">Use a bank account</div></div>
+                <div class="select-card" data-method="Debit / Credit Card" data-code="card" id="method-card"><div class="icon">💳</div><div class="t">Debit / Credit Card</div><div class="d">Use a payment card</div></div>
+                <div class="select-card" data-method="Digital Wallet" data-code="wallet" id="method-wallet"><div class="icon">📱</div><div class="t">Digital Wallet</div><div class="d">Use a wallet account</div></div>
+              </div>
+
+              <div class="method-fields" id="method-fields"></div>
+              <div class="secure-note">🔒 <span>Your demo payment details are used only for validation and are not saved to payment history.</span></div>
+
+              <div class="actions">
+                <button class="btn btn-outline" id="back-details">← Back</button>
+                <button class="btn btn-gold" id="submit-payment">Review & Confirm →</button>
+              </div>
+            </section>
+
+            <!-- STEP 3 -->
+            <section class="panel" id="panel3">
+              <div class="receipt">
+                <div class="check">✓</div>
+                <h3>Payment Confirmed</h3>
+                <p>Your demo transaction was processed successfully and added to your local payment history.</p>
+                <div class="receipt-table">
+                  <div><span>Reference ID</span><b id="receipt-ref">—</b></div>
+                  <div><span>Loan Account</span><b id="receipt-account">—</b></div>
+                  <div><span>Loan Type</span><b id="receipt-loan">—</b></div>
+                  <div><span>Payment Method</span><b id="receipt-method">—</b></div>
+                  <div><span>Amount Paid</span><b id="receipt-amount">—</b></div>
+                  <div><span>Date & Time</span><b id="receipt-date">—</b></div>
+                </div>
+                <div class="actions" style="border-top:0;justify-content:center">
+                  <button class="btn btn-outline" id="new-payment">Make Another Payment</button>
+                  <button class="btn btn-outline" id="print-receipt">Print Receipt</button>
+                  <button class="btn btn-gold" data-view="history">View History</button>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- SECURITY -->
+  <main id="view-security" class="view-section">
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Protection first</div>
+          <h2>Security</h2>
+          <p>EverRise is designed around a clear and careful payment experience. This school/demo version does not connect to a real payment processor.</p>
+        </div>
+        <div class="info-grid">
+          <div class="info-card"><div class="big-icon">🔐</div><h3>Secure session</h3><p>Your session starts after login and can be ended immediately using Sign Out.</p><ul><li>Login screen before portal access</li><li>Masked account number in history</li><li>No sensitive card data stored</li></ul></div>
+          <div class="info-card"><div class="big-icon">🛡</div><h3>Payment protection</h3><p>The payment form checks required information before allowing confirmation.</p><ul><li>Required-field validation</li><li>Method-specific fields</li><li>Unique payment reference</li></ul></div>
+          <div class="info-card"><div class="big-icon">✓</div><h3>Clear records</h3><p>Each completed demo payment gets a date, method, amount, loan type, and reference ID.</p><ul><li>Transaction history</li><li>Printable receipt</li><li>Local browser storage</li></ul></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- HELP -->
+  <main id="view-help" class="view-section">
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Support center</div>
+          <h2>Help</h2>
+          <p>Quick answers for using the EverRise loan payment portal.</p>
+        </div>
+        <div class="info-card">
+          <div class="faq"><button type="button">Which loans can I pay here? <span>+</span></button><p>This portal is designed for existing EverRise Car Loans and Mortgage Loans.</p></div>
+          <div class="faq"><button type="button">What should I enter as my account number? <span>+</span></button><p>Use the loan account number printed on your loan statement or loan documents. In this demo, any account number with at least six characters can generate a simulated balance.</p></div>
+          <div class="faq"><button type="button">Is this a real payment gateway? <span>+</span></button><p>No. This improved file is a functional presentation/demo portal. It simulates confirmation and saves demo transactions in your browser. A production version would need a secure backend and an approved payment processor.</p></div>
+          <div class="faq"><button type="button">Where can I see my past payments? <span>+</span></button><p>Open the payment history from the navigation. Demo transactions are stored in this browser using localStorage.</p></div>
+          <div class="faq"><button type="button">Can I print my receipt? <span>+</span></button><p>Yes. After a successful demo payment, choose Print Receipt to open the browser print dialog.</p></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- HISTORY -->
+  <main id="view-history" class="view-section">
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">Your records</div>
+          <h2>Payment History</h2>
+          <p>Review the demo payments completed in this browser session.</p>
+          <div style="margin-top:16px"><button class="btn btn-gold" data-view="payments">Make a New Payment</button></div>
+        </div>
+        <div class="history-box">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Reference</th><th>Date</th><th>Loan Type</th><th>Account</th><th>Method</th><th>Amount</th></tr></thead>
+              <tbody id="history-body"><tr><td colspan="6" class="empty">No transactions yet. Make a payment to see it here.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-grid">
+      <div><div class="footer-brand">Ever<span>Rise</span> Bank</div><div style="margin-top:3px">Together, We Rise</div></div>
+      <div>© 2026 EverRise Financial • Secure Portal Environment • Demo / Presentation Version</div>
+    </div>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = (selector) => document.querySelector(selector);
+  const $$ = (selector) => [...document.querySelectorAll(selector)];
+  const money = (n) => "₱" + Number(n).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2});
+  const storageKey = "everRiseDemoTransactions";
+  let currentView = "dashboard";
+  let activeLoan = "Car Loan";
+  let activeMethod = "Bank Transfer";
+  let demoAmount = 0;
+
+  function showToast(message) {
+    const toast = $("#toast");
+    toast.textContent = message;
+    toast.classList.add("show");
+    clearTimeout(showToast.timer);
+    showToast.timer = setTimeout(() => toast.classList.remove("show"), 2800);
+  }
+
+  function getTransactions() {
+    try { return JSON.parse(localStorage.getItem(storageKey) || "[]"); }
+    catch { return []; }
+  }
+
+  function saveTransactions(items) {
+    localStorage.setItem(storageKey, JSON.stringify(items));
+  }
+
+  function switchView(view) {
+    const valid = ["dashboard","products","payments","security","help","history"];
+    if (!valid.includes(view)) view = "dashboard";
+    currentView = view;
+    $$(".view-section").forEach(el => el.classList.remove("active"));
+    $("#view-" + view).classList.add("active");
+    $$("[data-view]").forEach(el => el.classList.toggle("active", el.dataset.view === view));
+    window.scrollTo({top:0,behavior:"smooth"});
+    if (view === "history") renderHistory();
+  }
+
+  $$("[data-view]").forEach(el => {
+    el.addEventListener("click", e => {
+      e.preventDefault();
+      switchView(el.dataset.view);
+    });
+  });
+
+  $("#toggle-pass").addEventListener("click", () => {
+    const input = $("#auth-password");
+    const visible = input.type === "text";
+    input.type = visible ? "password" : "text";
+    $("#toggle-pass").textContent = visible ? "Show" : "Hide";
+  });
+
+  $("#login-form").addEventListener("submit", e => {
+    e.preventDefault();
+    const email = $("#auth-email").value.trim();
+    const password = $("#auth-password").value.trim();
+    if (!email || !password) return showToast("Please enter your email and password.");
+    const btn = $("#login-btn");
+    btn.disabled = true;
+    btn.textContent = "Signing In...";
+    setTimeout(() => {
+      sessionStorage.setItem("everRiseLoggedIn","1");
+      sessionStorage.setItem("everRiseEmail",email);
+      $("#user-display").textContent = email;
+      $("#auth-screen").style.display = "none";
+      $("#app-content").style.display = "block";
+      btn.disabled = false;
+      btn.textContent = "Sign In Securely";
+      switchView("dashboard");
+      showToast("Welcome to your EverRise payment portal.");
+    }, 450);
+  });
+
+  $("#logout-btn").addEventListener("click", () => {
+    sessionStorage.removeItem("everRiseLoggedIn");
+    sessionStorage.removeItem("everRiseEmail");
+    $("#app-content").style.display = "none";
+    $("#auth-screen").style.display = "flex";
+    switchView("dashboard");
+    showToast("You have been signed out.");
+  });
+
+  function setLoan(type) {
+    activeLoan = type;
+    $("#loan-car").classList.toggle("sel",type === "Car Loan");
+    $("#loan-mortgage").classList.toggle("sel",type === "Mortgage Loan");
+    lookupLoan();
+  }
+  $("#loan-car").addEventListener("click", () => setLoan("Car Loan"));
+  $("#loan-mortgage").addEventListener("click", () => setLoan("Mortgage Loan"));
+
+  function lookupLoan() {
+    const account = $("#account-number").value.trim();
+    const amountInput = $("#amount-to-pay");
+    const amount = Number(amountInput.value);
+    const card = $("#lookup-card");
+    const continueBtn = $("#continue-details");
+
+    if (account.length < 6 || !Number.isFinite(amount) || amount <= 0) {
+      card.style.display = "none";
+      continueBtn.disabled = true;
+      demoAmount = 0;
+      return;
+    }
+
+    // The user-entered amount is used directly. No random payment amount is generated.
+    demoAmount = Math.round(amount * 100) / 100;
+
+    // Keep the demo due date predictable without changing the payment amount.
+    let hash = 0;
+    for (const ch of account) hash = (hash + ch.charCodeAt(0) * 17) % 1000;
+    const due = new Date();
+    due.setDate(due.getDate() + 12 + (hash % 9));
+
+    $("#summary-product").textContent = activeLoan;
+    $("#summary-installment").textContent = money(demoAmount);
+    $("#summary-due").textContent = due.toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"});
+    $("#summary-total").textContent = money(demoAmount);
+    card.style.display = "block";
+    continueBtn.disabled = false;
+  }
+
+  $("#account-number").addEventListener("input", lookupLoan);
+  $("#amount-to-pay").addEventListener("input", lookupLoan);
+
+  function goStep(step) {
+    $$(".panel").forEach(p => p.classList.remove("on"));
+    $$(".prog").forEach((p,i) => p.classList.toggle("on",i < step));
+    $("#panel" + step).classList.add("on");
+  }
+
+  $("#continue-details").addEventListener("click", () => {
+    if ($("#account-number").value.trim().length < 6) return showToast("Enter a valid demo loan account number.");
+    goStep(2);
+    renderMethodFields();
+  });
+  $("#back-details").addEventListener("click", () => goStep(1));
+
+  $$(".select-card[data-code]").forEach(card => {
+    card.addEventListener("click", () => {
+      $$(".select-card[data-code]").forEach(c => c.classList.remove("sel"));
+      card.classList.add("sel");
+      activeMethod = card.dataset.method;
+      renderMethodFields();
+    });
+  });
+
+  function renderMethodFields() {
+    const fields = $("#method-fields");
+    if (activeMethod === "Bank Transfer") {
+      fields.innerHTML = `
+        <div class="form-grid">
+          <div class="field"><label for="bank-name">Bank Name *</label><input id="bank-name" placeholder="e.g. EverRise Bank"></div>
+          <div class="field"><label for="bank-account">Account Number *</label><input id="bank-account" inputmode="numeric" placeholder="Enter account number"></div>
+        </div>`;
+    } else if (activeMethod === "Debit / Credit Card") {
+      fields.innerHTML = `
+        <div class="form-grid">
+          <div class="field full"><label for="card-number">Card Number *</label><input id="card-number" inputmode="numeric" maxlength="19" placeholder="0000 0000 0000 0000"></div>
+          <div class="field"><label for="card-expiry">Expiration *</label><input id="card-expiry" maxlength="5" placeholder="MM/YY"></div>
+          <div class="field"><label for="card-cvc">CVC *</label><input id="card-cvc" type="password" inputmode="numeric" maxlength="4" placeholder="123"></div>
+        </div>`;
+      $("#card-number").addEventListener("input", e => {
+        let v = e.target.value.replace(/\D/g,"").slice(0,16);
+        e.target.value = v.replace(/(.{4})/g,"$1 ").trim();
+      });
+      $("#card-expiry").addEventListener("input", e => {
+        let v = e.target.value.replace(/\D/g,"").slice(0,4);
+        e.target.value = v.length > 2 ? v.slice(0,2) + "/" + v.slice(2) : v;
+      });
+    } else {
+      fields.innerHTML = `
+        <div class="form-grid">
+          <div class="field full"><label for="wallet-id">Wallet Phone Number / ID *</label><input id="wallet-id" placeholder="09XX XXX XXXX"></div>
+        </div>`;
+    }
+  }
+
+  function validMethodFields() {
+    const inputs = [...$("#method-fields").querySelectorAll("input")];
+    if (inputs.some(i => !i.value.trim())) {
+      showToast("Please complete all required payment fields.");
+      return false;
+    }
+    if (activeMethod === "Debit / Credit Card") {
+      const digits = $("#card-number").value.replace(/\D/g,"");
+      if (digits.length < 12) { showToast("Enter a valid demo card number."); return false; }
+      if (!/^\d{2}\/\d{2}$/.test($("#card-expiry").value)) { showToast("Enter the expiration as MM/YY."); return false; }
+      if ($("#card-cvc").value.replace(/\D/g,"").length < 3) { showToast("Enter a valid CVC."); return false; }
+    }
+    return true;
+  }
+
+  $("#submit-payment").addEventListener("click", () => {
+    if (!validMethodFields()) return;
+    const btn = $("#submit-payment");
+    btn.disabled = true;
+    btn.textContent = "Processing...";
+    setTimeout(() => {
+      const account = $("#account-number").value.trim();
+      const ref = "ER-" + new Date().getFullYear() + "-" + Math.floor(100000 + Math.random()*900000);
+      const now = new Date();
+      const txn = {
+        refId:ref, loanType:activeLoan, accountNumber:account, amount:demoAmount,
+        method:activeMethod, date:now.toISOString()
+      };
+      const items = getTransactions();
+      items.unshift(txn);
+      saveTransactions(items);
+      $("#receipt-ref").textContent = ref;
+      $("#receipt-account").textContent = "•••• " + account.slice(-4);
+      $("#receipt-loan").textContent = activeLoan;
+      $("#receipt-method").textContent = activeMethod;
+      $("#receipt-amount").textContent = money(demoAmount);
+      $("#receipt-date").textContent = now.toLocaleString("en-PH",{dateStyle:"medium",timeStyle:"short"});
+      btn.disabled = false;
+      btn.textContent = "Review & Confirm →";
+      goStep(3);
+      showToast("Payment confirmed. Reference " + ref);
+    },650);
+  });
+
+  $("#new-payment").addEventListener("click", () => {
+    $("#account-number").value = "";
+    $("#amount-to-pay").value = "";
+    $("#borrower-name").value = "";
+    $("#lookup-card").style.display = "none";
+    $("#continue-details").disabled = true;
+    demoAmount = 0;
+    activeLoan = "Car Loan";
+    $("#loan-car").classList.add("sel");
+    $("#loan-mortgage").classList.remove("sel");
+    activeMethod = "Bank Transfer";
+    $$(".select-card[data-code]").forEach(c => c.classList.toggle("sel",c.dataset.code === "bank"));
+    goStep(1);
+  });
+
+  $("#print-receipt").addEventListener("click", () => window.print());
+
+  function renderHistory() {
+    const body = $("#history-body");
+    const items = getTransactions();
+    if (!items.length) {
+      body.innerHTML = '<tr><td colspan="6" class="empty">No transactions yet. Make a payment to see it here.</td></tr>';
+      return;
+    }
+    body.innerHTML = items.map(txn => {
+      const d = new Date(txn.date);
+      const masked = "•••• " + String(txn.accountNumber).slice(-4);
+      return `<tr>
+        <td style="font-family:monospace;font-weight:800;color:var(--navy)">${escapeHtml(txn.refId)}</td>
+        <td>${d.toLocaleDateString("en-PH",{month:"short",day:"numeric",year:"numeric"})}</td>
+        <td>${escapeHtml(txn.loanType)}</td>
+        <td>${escapeHtml(masked)}</td>
+        <td>${escapeHtml(txn.method)}</td>
+        <td style="font-weight:900;color:var(--navy)">${money(txn.amount)}</td>
+      </tr>`;
+    }).join("");
+  }
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
+  }
+
+  $$(".faq button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const item = btn.closest(".faq");
+      item.classList.toggle("open");
+      btn.querySelector("span").textContent = item.classList.contains("open") ? "−" : "+";
+    });
+  });
+
+  // Restore a logged-in demo session after refresh.
+  if (sessionStorage.getItem("everRiseLoggedIn") === "1") {
+    $("#auth-screen").style.display = "none";
+    $("#app-content").style.display = "block";
+    $("#user-display").textContent = sessionStorage.getItem("everRiseEmail") || "user@everrise.com";
+    renderMethodFields();
+    renderHistory();
+  } else {
+    renderMethodFields();
+  }
+})();
+</script>
+</body>
+</html>
